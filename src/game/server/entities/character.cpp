@@ -1760,7 +1760,7 @@ void CCharacter::HandleTiles(int Index)
 	if (m_TileIndex == TILE_EMOTE_SPAM || m_TileFIndex == TILE_EMOTE_SPAM)
 	{
 		if (Server()->Tick() % 40 == 0)
-			GameServer()->SendEmoticon(m_pPlayer->GetCID(), EMOTICON_GHOST);
+			GameServer()->SendEmoticon(m_pPlayer->GetCID(), EMOTICON_EXCLAMATION);
 	}
 
 	if (m_TileIndex == TILE_REMOVE_NAME || m_TileFIndex == TILE_REMOVE_NAME)
