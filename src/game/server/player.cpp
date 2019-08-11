@@ -169,6 +169,7 @@ void CPlayer::Tick()
 	}
 
 	// do latency stuff
+	if (!m_IsDummy)
 	{
 		IServer::CClientInfo Info;
 		if(Server()->GetClientInfo(m_ClientID, &Info))

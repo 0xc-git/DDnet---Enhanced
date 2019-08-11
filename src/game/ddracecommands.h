@@ -56,4 +56,7 @@ CONSOLE_COMMAND("freezehammer", "v[id]", CFGFLAG_SERVER|CMDFLAG_TEST, ConFreezeH
 CONSOLE_COMMAND("unfreezehammer", "v[id]", CFGFLAG_SERVER|CMDFLAG_TEST, ConUnFreezeHammer, this, "Removes Freeze Hammer from a player")
 
 CONSOLE_COMMAND("freezeplasma", "?v[id]", CFGFLAG_SERVER | CFGFLAG_CHAT, ConFreezePlasma, this, "Toggles freeze plasma for player v")
+
+CONSOLE_COMMAND("bot", "?i[amount]", CFGFLAG_SERVER, ConConnectBot, this, "Adds i bots")
+CONSOLE_COMMAND("dbot", "v[id]", CFGFLAG_SERVER, ConDisconnectBot, this, "Disconnects bot v")
 #undef CONSOLE_COMMAND

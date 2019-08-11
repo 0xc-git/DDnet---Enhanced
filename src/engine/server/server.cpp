@@ -428,10 +428,12 @@ void CServer::Kick(int ClientID, const char *pReason)
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "you can't kick yourself");
 		return;
 	}
-	else if(m_aClients[ClientID].m_Authed > m_RconAuthLevel)
+	// Dummy
+	else if (m_aClients[ClientID].m_Authed > m_RconAuthLevel || m_aClients[ClientID].m_State == CClient::STATE_DUMMY)
 	{
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "kick command denied");
 		return;
+
 	}
 
 	m_NetServer.Drop(ClientID, pReason);
@@ -507,7 +509,7 @@ int CServer::GetClientInfo(int ClientID, CClientInfo *pInfo)
 	dbg_assert(ClientID >= 0 && ClientID < MAX_CLIENTS, "client_id is not valid");
 	dbg_assert(pInfo != 0, "info can not be null");
 
-	if(m_aClients[ClientID].m_State == CClient::STATE_INGAME)
+	if(m_aClients[ClientID].m_State == CClient::STATE_INGAME || m_aClients[ClientID].m_State == CClient::STATE_DUMMY)
 	{
 		pInfo->m_pName = m_aClients[ClientID].m_aName;
 		pInfo->m_Latency = m_aClients[ClientID].m_Latency;
@@ -528,7 +530,8 @@ const char *CServer::ClientName(int ClientID)
 {
 	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
 		return "(invalid)";
-	if(m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME)
+	// Dummy
+	if (m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME || m_aClients[ClientID].m_State == CServer::CClient::STATE_DUMMY)
 		return m_aClients[ClientID].m_aName;
 	else
 		return "(connecting)";
@@ -549,7 +552,8 @@ int CServer::ClientCountry(int ClientID)
 {
 	if(ClientID < 0 || ClientID >= MAX_CLIENTS || m_aClients[ClientID].m_State == CServer::CClient::STATE_EMPTY)
 		return -1;
-	if(m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME)
+	// Dummy
+	if (m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME || m_aClients[ClientID].m_State == CServer::CClient::STATE_DUMMY)
 		return m_aClients[ClientID].m_Country;
 	else
 		return -1;
@@ -557,7 +561,8 @@ int CServer::ClientCountry(int ClientID)
 
 bool CServer::ClientIngame(int ClientID)
 {
-	return ClientID >= 0 && ClientID < MAX_CLIENTS && m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME;
+	// Dummy
+	return ClientID >= 0 && ClientID < MAX_CLIENTS && (m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME || m_aClients[ClientID].m_State == CServer::CClient::STATE_DUMMY);
 }
 
 bool CServer::ClientAuthed(int ClientID)
@@ -619,6 +624,42 @@ int CServer::SendMsg(CMsgPacker *pMsg, int Flags, int ClientID)
 {
 	return SendMsgEx(pMsg, Flags, ClientID, false);
 }
+// Dummy - WEIRD
+void CServer::DummyJoin(int DummyID, const char* pDummyName, const char* pDummyClan, int Country)
+{
+	const char* pNames[] = {
+		"name0", "name1", "name2", "name3", "name4", "name5", "name6", "name7", "name8", "name9", "name10", "name11", "name12", "name13", "name14", "name15",
+		"name16", "name17", "name18", "name19", "name20", "name21", "name22", "name23", "name24", "name25", "name26", "name27", "name28", "name29", "name30", "name31",
+		"name32", "name33", "name34", "name35", "name36", "name37", "name38", "name39", "name40", "name41", "name42", "name43", "name44", "name45", "name46", "name47",
+		"name48", "name49", "name50", "name51", "name52", "name53", "name54", "name55", "name56", "name57", "name58", "nam59", "name60", "name61", "name62", "name63"
+	};
+
+	m_NetServer.DummyInit(DummyID);
+	m_aClients[DummyID].m_State = CClient::STATE_DUMMY;
+	m_aClients[DummyID].m_Authed = AUTHED_NO;
+
+	str_copy(m_aClients[DummyID].m_aName, pDummyName[0] != '\0' ? pDummyName : pNames[DummyID], MAX_NAME_LENGTH);
+	str_copy(m_aClients[DummyID].m_aClan, pDummyClan, MAX_CLAN_LENGTH);
+	m_aClients[DummyID].m_Country = Country;
+}
+
+// Dummy -WEIRD
+void CServer::DummyLeave(int DummyID, const char* pReason)
+{
+	GameServer()->OnClientDrop(DummyID, pReason);
+
+	m_aClients[DummyID].m_State = CClient::STATE_EMPTY;
+	m_aClients[DummyID].m_aName[0] = 0;
+	m_aClients[DummyID].m_aClan[0] = 0;
+	m_aClients[DummyID].m_Country = -1;
+	m_aClients[DummyID].m_Authed = AUTHED_NO;
+	m_aClients[DummyID].m_AuthTries = 0;
+	m_aClients[DummyID].m_pRconCmdToSend = 0;
+	m_aClients[DummyID].m_Snapshots.PurgeAll();
+
+	m_NetServer.DummyDelete(DummyID);
+}
+
 
 int CServer::SendMsgEx(CMsgPacker *pMsg, int Flags, int ClientID, bool System)
 {
@@ -1509,10 +1550,10 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool Sen
 	char aBuf[128];
 
 	// count the players
-	int PlayerCount = 0, ClientCount = 0;
+	int PlayerCount = 0, ClientCount = 0, DummyCount = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if(m_aClients[i].m_State != CClient::STATE_EMPTY)
+		if(m_aClients[i].m_State != CClient::STATE_EMPTY && m_aClients[i].m_State != CClient::STATE_DUMMY)
 		{
 			if(GameServer()->IsClientPlayer(i))
 				PlayerCount++;
@@ -1653,7 +1694,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool Sen
 
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if(m_aClients[i].m_State != CClient::STATE_EMPTY)
+		if(m_aClients[i].m_State != CClient::STATE_EMPTY && m_aClients[i].m_State != CClient::STATE_DUMMY)
 		{
 			if(Remaining == 0)
 			{
@@ -1789,6 +1830,12 @@ int CServer::LoadMap(const char *pMapName)
 
 	if(!m_pMap->Load(aBuf))
 		return 0;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (m_aClients[i].m_State == CClient::STATE_DUMMY)
+			DummyLeave(i);
+	}
 
 	// stop recording when we change map
 	for(int i = 0; i < MAX_CLIENTS+1; i++)
@@ -2211,6 +2258,10 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 			str_format(aBuf, sizeof(aBuf), "id=%d addr=<{%s}> name='%s' client=%d secure=%s flags=%d%s%s",
 				i, aAddrStr, pThis->m_aClients[i].m_aName, pThis->GameServer()->GetClientVersion(i),
 				pThis->m_NetServer.HasSecurityToken(i) ? "yes" : "no", pThis->m_aClients[i].m_Flags, aDnsblStr, aAuthStr);
+		}
+		else if (pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
+		{
+			str_format(aBuf, sizeof(aBuf), "id=%d name='%s' dummy=yes", i, pThis->m_aClients[i].m_aName);
 		}
 		else
 		{

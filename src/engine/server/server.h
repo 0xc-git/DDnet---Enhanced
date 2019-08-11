@@ -124,6 +124,8 @@ public:
 			STATE_CONNECTING,
 			STATE_READY,
 			STATE_INGAME,
+			// Dummy
+			STATE_DUMMY,
 
 			SNAPRATE_INIT=0,
 			SNAPRATE_FULL,
@@ -294,6 +296,9 @@ public:
 	void SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool SendClients);
 	void SendServerInfoConnless(const NETADDR *pAddr, int Token, int Type);
 	void UpdateServerInfo();
+	// Dummy
+	void DummyJoin(int DummyID, const char* pDummyName, const char* pDummyClan, int Country);
+	void DummyLeave(int DummyID, const char* pDummyName = 0);
 
 	void PumpNetwork();
 

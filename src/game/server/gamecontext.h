@@ -259,6 +259,8 @@ public:
 	bool PlayerModerating();
 	void ForceVote(int EnforcerID, bool Success);
 
+	bool NewDummy(int DummyID, bool CustomColor = false, int ColorBody = 12895054, int ColorFeet = 12895054, const char* pSkin = "coala", const char* pName = "", const char* pClan = "[16x16]", int Country = -1);
+
 private:
 
 	bool m_VoteWillPass;
@@ -368,6 +370,9 @@ private:
 	static void ConFreezePlasma(IConsole::IResult* pResult, void* pUserData);
 	static void ConMember(IConsole::IResult* pResult, void* pUserData);
 	static void ConGrenadeGun(IConsole::IResult* pResult, void* pUserData);
+
+	static void ConConnectBot(IConsole::IResult* pResult, void* pUserData);
+	static void ConDisconnectBot(IConsole::IResult* pResult, void* pUserData);
 
 	enum
 	{

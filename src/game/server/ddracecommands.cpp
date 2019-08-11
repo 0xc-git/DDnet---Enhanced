@@ -737,3 +737,30 @@ void CGameContext::ConFreezePlasma(IConsole::IResult* pResult, void* pUserData)
 	else
 		pSelf->SendChatTarget(Victim, "You lost freeze plasma");
 }
+
+void CGameContext::ConConnectBot(IConsole::IResult* pResult, void* pUserData)
+{
+	CGameContext* pSelf = (CGameContext*)pUserData;
+	int Amount = pResult->GetInteger(0);
+	if (!Amount)
+		Amount = 1;
+
+	for (int i = 0; i < Amount; i++)
+	{
+		for (int j = 0; j < g_Config.m_SvMaxClients; j++)
+		{
+			if (pSelf->NewDummy(j, true))
+				break;
+		}
+	}
+}
+
+void CGameContext::ConDisconnectBot(IConsole::IResult* pResult, void* pUserData)
+{
+	CGameContext* pSelf = (CGameContext*)pUserData;
+	int ID = pResult->GetVictim();
+	if (ID >= 0 && ID < MAX_CLIENTS && pSelf->m_apPlayers[ID] && pSelf->m_apPlayers[ID]->m_IsDummy)
+		pSelf->Server()->DummyLeave(ID);
+}
+
+

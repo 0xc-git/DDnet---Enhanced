@@ -141,7 +141,17 @@ int CNetServer::Update()
 
 	return 0;
 }
+// Dummy
+void CNetServer::DummyInit(int DummyID)
+{
+	m_aSlots[DummyID].m_Connection.DummyConnect();
+}
 
+// Dummy
+void CNetServer::DummyDelete(int DummyID)
+{
+	m_aSlots[DummyID].m_Connection.DummyDrop();
+}
 SECURITY_TOKEN CNetServer::GetToken(const NETADDR &Addr)
 {
 	SHA256_CTX Sha256;
@@ -704,6 +714,10 @@ int CNetServer::Send(CNetChunk *pChunk)
 		}
 		else
 		{
+			// Dummy
+			if (m_aSlots[pChunk->m_ClientID].m_Connection.State() == NET_CONNSTATE_DUMMY)
+				return -1;
+
 			//Drop(pChunk->m_ClientID, "Error sending data");
 		}
 	}

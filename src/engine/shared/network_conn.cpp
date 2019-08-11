@@ -219,6 +219,16 @@ void CNetConnection::Disconnect(const char *pReason)
 
 	Reset();
 }
+// Dummy
+void CNetConnection::DummyConnect()
+{
+	m_State = NET_CONNSTATE_DUMMY;
+}
+
+void CNetConnection::DummyDrop()
+{
+	m_State = NET_CONNSTATE_OFFLINE;
+}
 
 void CNetConnection::DirectInit(NETADDR &Addr, SECURITY_TOKEN SecurityToken)
 {
@@ -402,7 +412,8 @@ int CNetConnection::Update()
 		SetError("Timeout Protection over");
 	}
 
-	if(State() == NET_CONNSTATE_OFFLINE || State() == NET_CONNSTATE_ERROR)
+	// Dummy
+	if (State() == NET_CONNSTATE_OFFLINE || State() == NET_CONNSTATE_ERROR || State() == NET_CONNSTATE_DUMMY)
 		return 0;
 
 	m_TimeoutSituation = false;

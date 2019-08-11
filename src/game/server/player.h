@@ -43,7 +43,8 @@ public:
 	void ThreadKillCharacter(int Weapon = WEAPON_GAME);
 	void KillCharacter(int Weapon = WEAPON_GAME);
 	CCharacter *GetCharacter();
-
+	// Dummy
+	bool m_IsDummy;
 
 	void SpectatePlayerName(const char *pName);
 

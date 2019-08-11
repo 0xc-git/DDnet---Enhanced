@@ -446,6 +446,24 @@ void CGameContext::StartVote(const char *pDesc, const char *pCommand, const char
 	SendVoteSet(-1);
 	m_VoteUpdate = true;
 }
+// Dummy
+bool CGameContext::NewDummy(int DummyID, bool CustomColor, int ColorBody, int ColorFeet, const char* pSkin, const char* pName, const char* pClan, int Country)
+{
+	if (((CServer*)Server())->m_aClients[DummyID].m_State != CServer::CClient::STATE_EMPTY)
+		return false;
+
+	m_apPlayers[DummyID] = new(DummyID) CPlayer(this, DummyID, m_pController->GetAutoTeam(DummyID));
+	m_apPlayers[DummyID]->m_IsDummy = true;
+	Server()->DummyJoin(DummyID, pName, pClan, Country);
+
+	str_copy(m_apPlayers[DummyID]->m_TeeInfos.m_SkinName, pSkin, sizeof(m_apPlayers[DummyID]->m_TeeInfos.m_SkinName));
+	m_apPlayers[DummyID]->m_TeeInfos.m_UseCustomColor = CustomColor;
+	m_apPlayers[DummyID]->m_TeeInfos.m_ColorBody = ColorBody;
+	m_apPlayers[DummyID]->m_TeeInfos.m_ColorFeet = ColorFeet;
+
+	OnClientEnter(DummyID);
+	return true;
+}
 
 
 void CGameContext::EndVote()
@@ -1554,6 +1572,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					m_apPlayers[ClientID]->m_Last_KickVote = time_get();
 					return;
 				}
+				if (m_apPlayers[KickID]->m_IsDummy)
+				{
+					SendChatTarget(ClientID, "Invalid client id to kick (Dummy)");
+					return;
+				}
 
 				str_format(aChatmsg, sizeof(aChatmsg), "'%s' called for vote to kick '%s' (%s)", Server()->ClientName(ClientID), Server()->ClientName(KickID), aReason);
 				if(!GetDDRaceTeam(ClientID))
@@ -1601,6 +1624,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					SendChatTarget(ClientID, "You can't move yourself");
 					return;
 				}
+				// Dummy
+				if (m_apPlayers[SpectateID]->m_IsDummy)
+				{
+					SendChatTarget(ClientID, "Invalid client id to move (Dummy)");
+					return;
+				}
+
 				if (!Server()->ReverseTranslate(SpectateID, ClientID))
 				{
 					return;
@@ -2443,7 +2473,12 @@ void CGameContext::ConForceVote(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Invalid client id to kick");
 			return;
 		}
-
+		// Dummy
+		if (pSelf->m_apPlayers[KickID]->m_IsDummy)
+		{
+			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Invalid client id to kick (Dummy)");
+			return;
+		}
 		if (!g_Config.m_SvVoteKickBantime)
 		{
 			str_format(aBuf, sizeof(aBuf), "kick %d %s", KickID, pReason);
@@ -2465,7 +2500,12 @@ void CGameContext::ConForceVote(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Invalid client id to move");
 			return;
 		}
-
+		// Dummy
+		if (pSelf->m_apPlayers[SpectateID]->m_IsDummy)
+		{
+			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "Invalid client id to move (Dummy)");
+			return;
+		}
 		str_format(aBuf, sizeof(aBuf), "'%s' was moved to spectator (%s)", pSelf->Server()->ClientName(SpectateID), pReason);
 		pSelf->SendChatTarget(-1, aBuf);
 		str_format(aBuf, sizeof(aBuf), "set_team %d -1 %d", SpectateID, g_Config.m_SvVoteSpectateRejoindelay);
