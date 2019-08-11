@@ -296,12 +296,14 @@ void CGameContext::ConToCheckTeleporter(IConsole::IResult *pResult, void *pUserD
 
 void CGameContext::ConTeleport(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *) pUserData;
-	int Tele = pResult->NumArguments() == 2 ? pResult->GetInteger(0) : pResult->m_ClientID;
-	int TeleTo = pResult->NumArguments() ? pResult->GetInteger(pResult->NumArguments() - 1) : pResult->m_ClientID;
+	CGameContext* pSelf = (CGameContext*)pUserData;
+	int Tele = pResult->GetVictim();
+	int TeleTo = pResult->NumArguments() == 2 ? pResult->GetInteger(1) : pResult->m_ClientID;
+	if (pResult->NumArguments() < 2 && Tele != pResult->m_ClientID)
+		return;
 
-	CCharacter *pChr = pSelf->GetPlayerChar(Tele);
-	if(pChr && pSelf->GetPlayerChar(TeleTo))
+	CCharacter* pChr = pSelf->GetPlayerChar(Tele);
+	if (pChr && pSelf->GetPlayerChar(TeleTo))
 	{
 		pChr->Core()->m_Pos = pSelf->m_apPlayers[TeleTo]->m_ViewPos;
 		pChr->m_Pos = pSelf->m_apPlayers[TeleTo]->m_ViewPos;

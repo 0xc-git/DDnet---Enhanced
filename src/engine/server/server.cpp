@@ -2259,7 +2259,7 @@ void CServer::ConStatus(IConsole::IResult *pResult, void *pUser)
 				i, aAddrStr, pThis->m_aClients[i].m_aName, pThis->GameServer()->GetClientVersion(i),
 				pThis->m_NetServer.HasSecurityToken(i) ? "yes" : "no", pThis->m_aClients[i].m_Flags, aDnsblStr, aAuthStr);
 		}
-		else if (pThis->m_aClients[i].m_State == CClient::STATE_INGAME)
+		else if (pThis->m_aClients[i].m_State == CClient::STATE_DUMMY)
 		{
 			str_format(aBuf, sizeof(aBuf), "id=%d name='%s' dummy=yes", i, pThis->m_aClients[i].m_aName);
 		}

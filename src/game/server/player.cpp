@@ -325,6 +325,9 @@ void CPlayer::Snap(int SnappingClient)
 	if(m_ClientID == SnappingClient && m_Paused == PAUSE_PAUSED && m_ClientVersion < VERSION_DDNET_OLD)
 		pPlayerInfo->m_Team = TEAM_SPECTATORS;
 
+	if (g_Config.m_SvHideBots && m_IsDummy)
+		pPlayerInfo->m_Team = TEAM_BLUE;
+
 	// send 0 if times of others are not shown
 	if(SnappingClient != m_ClientID && g_Config.m_SvHideScore)
 		pPlayerInfo->m_Score = -9999;

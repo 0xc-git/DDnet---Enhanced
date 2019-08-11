@@ -170,4 +170,6 @@ MACRO_CONFIG_INT(SvRescueDelay, sv_rescue_delay, 5, 0, 1000, CFGFLAG_SERVER, "Nu
 
 MACRO_CONFIG_INT(DbgFocus, dbg_focus, 0, 0, 1, CFGFLAG_CLIENT, "")
 MACRO_CONFIG_INT(DbgTuning, dbg_tuning, 0, 0, 1, CFGFLAG_CLIENT, "")
+
+MACRO_CONFIG_INT(SvHideBots, sv_hide_bots, 1, 0, 1, CFGFLAG_SERVER, "Hides bots from scoreboard")
 #endif
