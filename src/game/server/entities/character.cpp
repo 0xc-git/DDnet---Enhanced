@@ -1782,6 +1782,13 @@ void CCharacter::HandleTiles(int Index)
 			GameServer()->SendChatTarget(m_pPlayer->GetCID(), "You lost rainbow");
 		}
 	}
+
+	if ((m_TileIndex == TILE_RAINBOW || m_TileFIndex == TILE_RAINBOW) && !m_Rainbow)
+	{
+		m_Rainbow = true;
+		m_FakeColor = -1;
+		GameServer()->SendChatTarget(m_pPlayer->GetCID(), "You got rainbow");
+	}
 	
 	//END OF HALP <-- :D
 	// stopper
