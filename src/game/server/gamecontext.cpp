@@ -447,10 +447,11 @@ void CGameContext::StartVote(const char *pDesc, const char *pCommand, const char
 	m_VoteUpdate = true;
 }
 // Dummy
-bool CGameContext::NewDummy(int DummyID, bool CustomColor, int ColorBody, int ColorFeet, const char* pSkin, const char* pName, const char* pClan, int Country)
+int CGameContext::NewDummy(bool CustomColor, int ColorBody, int ColorFeet, const char* pSkin, const char* pName, const char* pClan, int Country)
 {
-	if (((CServer*)Server())->m_aClients[DummyID].m_State != CServer::CClient::STATE_EMPTY)
-		return false;
+	int DummyID = GetNextClientID();
+	if (DummyID < 0 || DummyID >= MAX_CLIENTS)
+		return -1;
 
 	m_apPlayers[DummyID] = new(DummyID) CPlayer(this, DummyID, m_pController->GetAutoTeam(DummyID));
 	m_apPlayers[DummyID]->m_IsDummy = true;
@@ -462,7 +463,17 @@ bool CGameContext::NewDummy(int DummyID, bool CustomColor, int ColorBody, int Co
 	m_apPlayers[DummyID]->m_TeeInfos.m_ColorFeet = ColorFeet;
 
 	OnClientEnter(DummyID);
-	return true;
+	return DummyID;
+}
+
+int CGameContext::GetNextClientID()
+{
+	for (int i = 0; i < g_Config.m_SvMaxClients; i++)
+	{
+		if (((CServer*)Server())->m_aClients[i].m_State == CServer::CClient::STATE_EMPTY)
+			return i;
+	}
+	return -1;
 }
 
 

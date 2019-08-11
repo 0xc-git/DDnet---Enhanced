@@ -137,6 +137,7 @@ void CPlayer::Reset()
 
 	m_RainbowColor = 0;
 	m_HideName = false;
+	m_ForceSpawnPos = vec2(-1, -1);
 }
 
 void CPlayer::Tick()
@@ -582,8 +583,11 @@ void CPlayer::TryRespawn()
 {
 	vec2 SpawnPos;
 
-	if(!GameServer()->m_pController->CanSpawn(m_Team, &SpawnPos))
+	if(m_ForceSpawnPos == vec2(-1, -1) && !GameServer()->m_pController->CanSpawn(m_Team, &SpawnPos))
 		return;
+
+	if (m_ForceSpawnPos != vec2(-1, -1))
+		SpawnPos = m_ForceSpawnPos;
 
 	CGameControllerDDRace* Controller = (CGameControllerDDRace*)GameServer()->m_pController;
 

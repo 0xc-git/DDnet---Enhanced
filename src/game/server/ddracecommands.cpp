@@ -746,13 +746,7 @@ void CGameContext::ConConnectBot(IConsole::IResult* pResult, void* pUserData)
 		Amount = 1;
 
 	for (int i = 0; i < Amount; i++)
-	{
-		for (int j = 0; j < g_Config.m_SvMaxClients; j++)
-		{
-			if (pSelf->NewDummy(j, true))
-				break;
-		}
-	}
+		pSelf->NewDummy(true);
 }
 
 void CGameContext::ConDisconnectBot(IConsole::IResult* pResult, void* pUserData)

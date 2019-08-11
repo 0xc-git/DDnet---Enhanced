@@ -328,6 +328,12 @@ bool IGameController::OnEntity(int Index, vec2 Pos, int Layer, int Flags, int Nu
 	{
 		new CGun(&GameServer()->m_World, Pos, false, false, Layer, Number);
 	}
+	else if (Index == ENTITY_BOT)
+	{
+		int BotID = GameServer()->NewDummy(true, 189538939, 379862, "beast", "0xc000f", "tile", -1);
+		if (GameServer()->m_apPlayers[BotID])
+			GameServer()->m_apPlayers[BotID]->m_ForceSpawnPos = Pos;
+	}
 
 	if(Type != -1)
 	{

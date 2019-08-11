@@ -45,6 +45,7 @@ public:
 	CCharacter *GetCharacter();
 	// Dummy
 	bool m_IsDummy;
+	vec2 m_ForceSpawnPos;
 
 	void SpectatePlayerName(const char *pName);
 
