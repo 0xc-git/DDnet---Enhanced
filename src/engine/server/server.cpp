@@ -628,8 +628,8 @@ int CServer::SendMsg(CMsgPacker *pMsg, int Flags, int ClientID)
 void CServer::DummyJoin(int DummyID, const char* pDummyName, const char* pDummyClan, int Country)
 {
 	const char* pNames[] = {
-		"0xc001f", "0xc002f", "Trotero", "fokkonaut", "pepega", "kiwi", "bob", "wusilu", "Defeteh", "Bro", "bruh", "FRANCHESCO VIRGOLINI", "FIUUU", "Crush", "PeppaPig", "DORAMIO",
-		"TODO MORAPIO", "DRACUKEO", "El empalador", "La culeo", "Un taladrador", "La meto", "La tuerzo", "La saco", "Un Radiador", "Aquasplash", "name26", "name27", "name28", "name29", "name30", "name31",
+		"0xc001f", "0xc002f", "Trotero", "fokkonaut", "pepega", "kiwi", "bob", "wusilu", "Defeteh", "Bro", "bruh", "FRANCHESCO", "FIUUU", "Crush", "PeppaPig", "DORAMIO",
+		"TODO MORAPIO", "DRACUKEO", "El empalador", "La culeo", "Un taladrador", "La meto", "La tuerzo", "La saco", "Un Radiador", "Aquasplash", "VIRGOLINI", "Garci", "La tuerzo x2", "name29", "name30", "name31",
 		"name32", "name33", "name34", "name35", "name36", "name37", "name38", "name39", "name40", "name41", "name42", "name43", "name44", "name45", "name46", "name47",
 		"name48", "name49", "name50", "name51", "name52", "name53", "name54", "name55", "name56", "name57", "name58", "nam59", "name60", "name61", "name62", "name63"
 	};
