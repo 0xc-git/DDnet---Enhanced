@@ -1774,7 +1774,7 @@ void CCharacter::HandleTiles(int Index)
 	bool Clear = m_TileIndex == TILE_COLOR_CLEAR || m_TileFIndex == TILE_COLOR_CLEAR;
 	if (White || Red || Clear)
 	{
-		m_FakeColor = White ? 255 : Red ? 65280 : -1;
+		m_FakeColor = White ? 255 : Red ? 16777022 : -1;
 
 		if (m_Rainbow)
 		{
