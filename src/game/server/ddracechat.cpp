@@ -35,6 +35,8 @@ void CGameContext::ConCredits(IConsole::IResult *pResult, void *pUserData)
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credits",
 		"Piepow, QingGo, RafaelFF, sctt, jao, daverck, fokkonaut,");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credits",
+		"Trotero,0xc000f,");
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credits",
 		"Bojidar, FallenKN, ardadem, archimede67, sirius1242 & others.");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credits",
 		"Based on DDRace by the DDRace developers,");
@@ -46,19 +48,9 @@ void CGameContext::ConInfo(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *) pUserData;
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"DDraceNetwork Mod. Version: " GAME_VERSION);
-	if(GIT_SHORTREV_HASH)
-	{
-		char aBuf[64];
-		str_format(aBuf, sizeof(aBuf), "Git revision hash: %s", GIT_SHORTREV_HASH);
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info", aBuf);
-	}
+			"Official site: https://github.com/trotero/DDnet---Enhanced");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"Official site: DDNet.tw");
-	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"For more info: /cmdlist");
-	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"Or visit DDNet.tw");
+			"Members cmd: /members");
 }
 
 void CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
