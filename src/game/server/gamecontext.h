@@ -259,7 +259,7 @@ public:
 	bool PlayerModerating();
 	void ForceVote(int EnforcerID, bool Success);
 
-	int NewDummy(bool CustomColor = false, int ColorBody = 12895054, int ColorFeet = 12895054, const char* pSkin = "beast", const char* pName = "", const char* pClan = "0xc000f", int Country = -1);
+	int NewDummy(bool CustomColor = false, int ColorBody = 1285784, int ColorFeet = 12895054, const char* pSkin = "beast", const char* pName = "", const char* pClan = "-/Bot", int Country = -1);
 	int GetNextClientID();
 
 private:

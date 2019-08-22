@@ -330,7 +330,7 @@ bool IGameController::OnEntity(int Index, vec2 Pos, int Layer, int Flags, int Nu
 	}
 	else if (Index == ENTITY_BOT)
 	{
-		int BotID = GameServer()->NewDummy(true, 189538939, 379862, "beast", "0xc000f", "-/Bot", -1);
+		int BotID = GameServer()->NewDummy(true, 189538939, 379862, "random", "0xc000f", "-/Bot", -1);
 		if (GameServer()->m_apPlayers[BotID])
 			GameServer()->m_apPlayers[BotID]->m_ForceSpawnPos = Pos;
 	}
